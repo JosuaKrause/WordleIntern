@@ -12,6 +12,7 @@ public class WordlePainterSimple implements WordlePainter {
 
   List<TextItem> items = new ArrayList<TextItem>();
   List<Shape> shapes = new ArrayList<Shape>();
+  List<Color> colors = new ArrayList<Color>();
   FontManager fm = new FontManager(6, 18, "Times");
   String fontName = "Times";
 
@@ -39,11 +40,12 @@ public class WordlePainterSimple implements WordlePainter {
 
   private void updateAllStuff() {
     shapes.clear();
+    colors.clear();
     for(final TextItem textItem : items) {
       final Font font = fm.get(textItem.size);
       final Shape outline = TextOutliner.getOutline(font, textItem.getTerm());
       shapes.add(outline);
-
+      colors.add(textItem.getColor());
     }
 
     final List<Shape> free = WordleLayouter.generateLayoutCircular(shapes,
@@ -54,9 +56,9 @@ public class WordlePainterSimple implements WordlePainter {
 
   @Override
   public void paint(final Graphics2D g) {
-    g.setColor(Color.black);
-    for(final Shape shape : shapes) {
-      g.fill(shape);
+    for(int i = 0; i < shapes.size(); ++i) {
+      g.setColor(colors.get(i));
+      g.fill(shapes.get(i));
     }
 
   }

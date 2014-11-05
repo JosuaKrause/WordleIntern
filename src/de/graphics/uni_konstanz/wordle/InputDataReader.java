@@ -1,5 +1,6 @@
 package de.graphics.uni_konstanz.wordle;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,8 +22,9 @@ public class InputDataReader {
       float max = Float.MIN_VALUE;
       float min = Float.MAX_VALUE;
 
+      CSVReader reader = null;
       try {
-        final CSVReader reader = new CSVReader(new FileReader(file));
+        reader = new CSVReader(new FileReader(file));
         String[] nextLine;
         while((nextLine = reader.readNext()) != null) {
           // nextLine[] is an array of values from the line
@@ -30,8 +32,8 @@ public class InputDataReader {
           System.out.println(nextLine[0] + nextLine[1] + "etc...");
 
           if(nextLine.length > 1) {
-            final String term = nextLine[0];
-            final Float weight = new Float(nextLine[1]);
+            final String term = nextLine[0].trim();
+            final Float weight = new Float(nextLine[1].trim());
             if(weight > max) {
               max = weight;
             }
@@ -39,7 +41,15 @@ public class InputDataReader {
               min = weight;
             }
 
-            res.add(new TextItem(term, weight));
+            final Color color;
+            if(nextLine.length > 2) { // we have a color
+              final String c = nextLine[2];
+              color = new Color(Integer.parseInt(c.trim(), 16));
+            } else {
+              color = Color.BLACK;
+            }
+
+            res.add(new TextItem(term, weight, color));
           }
 
         }
@@ -52,6 +62,14 @@ public class InputDataReader {
       } catch(final IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
+      } finally {
+        if(reader != null) {
+          try {
+            reader.close();
+          } catch(final IOException e) {
+            e.printStackTrace();
+          }
+        }
       }
 
       for(final TextItem textItem : res) {

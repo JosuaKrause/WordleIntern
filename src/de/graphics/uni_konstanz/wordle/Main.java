@@ -71,7 +71,7 @@ public class Main {
             pw.println(par.toString());
             pw.close();
           } catch(final IOException e) {
-            // no worries
+            e.printStackTrace();
           }
 
           System.out.println(loadCSV);
@@ -81,7 +81,6 @@ public class Main {
 
       }
     }));
-    guiPanel.add(new JButton("load color.."));
 
     /*
      * Find Times font and create combo box
@@ -98,7 +97,7 @@ public class Main {
     if(timesIndex > fonts.length) {
       timesIndex = 0;
     }
-    final JComboBox fontList = new JComboBox(fonts);
+    final JComboBox<String> fontList = new JComboBox<String>(fonts);
     fontList.setSelectedIndex(timesIndex);
     fontList.setMaximumSize(new Dimension(200, 30));
     fontList.addActionListener(new ActionListener() {
