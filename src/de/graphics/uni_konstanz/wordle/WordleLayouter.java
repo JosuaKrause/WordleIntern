@@ -289,14 +289,18 @@ public class WordleLayouter {
   private static boolean hasOverlap(final Deque<Area> alreadyLayouted,
       final Area current) {
     final Iterator<Area> already = alreadyLayouted.iterator();
+    boolean first = true;
     while(already.hasNext()) {
       final Area s = already.next();
       if(hasOverlap(s, current)) {
         // move overlapping shape to front
-        already.remove();
-        alreadyLayouted.addFirst(s);
+        if(!first) {
+          already.remove();
+          alreadyLayouted.addFirst(s);
+        }
         return true;
       }
+      first = false;
     }
     return false;
   }
