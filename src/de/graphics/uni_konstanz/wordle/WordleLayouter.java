@@ -42,6 +42,7 @@ public class WordleLayouter {
           .getBounds2D().getHeight());
       final double spiralFactor = minSide / 17.0;
       final double spiralStep = minSide / 10.0;
+      final Area bleeded = createBleededArea(new Area(cur));
       while(true) {
         final double tx = Math.sin(t) * t * spiralFactor;
         final double ty = Math.cos(t) * t * spiralFactor;
@@ -49,7 +50,8 @@ public class WordleLayouter {
         at.translate(tx, ty);
         // transformed object
         final Area transformedArea = getTransformedArea(cur, at);
-        if(!hasOverlap(layouted, transformedArea)) {
+        final Area transformedBleeded = getTransformedArea(bleeded, at);
+        if(!hasOverlap(layouted, transformedBleeded, new AffineTransform())) {
           // found placement
           layouted.add(transformedArea);
           break;
@@ -67,10 +69,8 @@ public class WordleLayouter {
           case ROT_90_DEG_LEFT:
             final AffineTransform rotLeft = new AffineTransform();
             rotLeft.rotate(-Math.PI / 2.0, centerX, centerY);
-            final Area resLeft = getTransformedArea(transformedArea,
-                rotLeft);
-            if(!hasOverlap(layouted, resLeft)) {
-              layouted.add(resLeft);
+            if(!hasOverlap(layouted, transformedBleeded, rotLeft)) {
+              layouted.add(getTransformedArea(transformedArea, rotLeft));
               foundSolution = true;
             }
             break;
@@ -78,10 +78,8 @@ public class WordleLayouter {
           case ROT_90_DEG_RIGHT:
             final AffineTransform rotRight = new AffineTransform();
             rotRight.rotate(-Math.PI / 2.0, centerX, centerY);
-            final Area resRight = getTransformedArea(transformedArea,
-                rotRight);
-            if(!hasOverlap(layouted, resRight)) {
-              layouted.add(resRight);
+            if(!hasOverlap(layouted, transformedBleeded, rotRight)) {
+              layouted.add(getTransformedArea(transformedArea, rotRight));
               foundSolution = true;
             }
             break;
@@ -90,17 +88,15 @@ public class WordleLayouter {
             // left
             AffineTransform rot = new AffineTransform();
             rot.rotate(-Math.PI / 2.0, centerX, centerY);
-            final Area rotL = getTransformedArea(transformedArea, rot);
-            if(!hasOverlap(layouted, rotL)) {
-              layouted.add(rotL);
+            if(!hasOverlap(layouted, transformedBleeded, rot)) {
+              layouted.add(getTransformedArea(transformedArea, rot));
               foundSolution = true;
             }
             // right
             rot = new AffineTransform();
             rot.rotate(Math.PI / 2.0, centerX, centerY);
-            final Area rotR = getTransformedArea(transformedArea, rot);
-            if(!hasOverlap(layouted, rotR)) {
-              layouted.add(rotR);
+            if(!hasOverlap(layouted, transformedBleeded, rot)) {
+              layouted.add(getTransformedArea(transformedArea, rot));
               foundSolution = true;
             }
             break;
@@ -109,17 +105,15 @@ public class WordleLayouter {
             // right
             rot = new AffineTransform();
             rot.rotate(Math.PI / 2.0, centerX, centerY);
-            final Area rot2 = getTransformedArea(transformedArea, rot);
-            if(!hasOverlap(layouted, rot2)) {
-              layouted.add(rot2);
+            if(!hasOverlap(layouted, transformedBleeded, rot)) {
+              layouted.add(getTransformedArea(transformedArea, rot));
               foundSolution = true;
             }
             // left
             rot = new AffineTransform();
             rot.rotate(-Math.PI / 2.0, centerX, centerY);
-            final Area rot1 = getTransformedArea(transformedArea, rot);
-            if(!hasOverlap(layouted, rot1)) {
-              layouted.add(rot1);
+            if(!hasOverlap(layouted, transformedBleeded, rot)) {
+              layouted.add(getTransformedArea(transformedArea, rot));
               foundSolution = true;
             }
             break;
@@ -175,16 +169,20 @@ public class WordleLayouter {
           .getBounds2D().getHeight());
       final double spiralFactor = minSide / 17.0;
       final double spiralStep = minSide / 10.0;
+
+      final Area bleeded = createBleededArea(new Area(cur));
+
       while(true) {
         final double tx = Math.sin(t) * t * spiralFactor;
         final double ty = Math.cos(t) * t * spiralFactor;
         final AffineTransform at = new AffineTransform();
         at.translate(tx, ty);
         // transformed object
-        final Area transformedArea = getTransformedArea(cur, at);
-        if(!hasOverlap(layouted, transformedArea)) {
+        final Area transformedArea = getTransformedArea(bleeded, at);
+        final Area transformedBleeded = getTransformedArea(bleeded, at);
+        if(!hasOverlap(layouted, transformedBleeded, new AffineTransform())) {
           // found placement
-          layouted.add(transformedArea);
+          layouted.add(getTransformedArea(cur, at));
           break;
         }
 
@@ -201,10 +199,8 @@ public class WordleLayouter {
           case ROT_90_DEG_LEFT:
             final AffineTransform rotLeft = new AffineTransform();
             rotLeft.rotate(-Math.PI / 2.0, centerX, centerY);
-            final Area resLeft = getTransformedArea(transformedArea,
-                rotLeft);
-            if(!hasOverlap(layouted, resLeft)) {
-              layouted.add(resLeft);
+            if(!hasOverlap(layouted, transformedBleeded, rotLeft)) {
+              layouted.add(getTransformedArea(transformedArea, rotLeft));
               foundSolution = true;
             }
             break;
@@ -212,10 +208,8 @@ public class WordleLayouter {
           case ROT_90_DEG_RIGHT:
             final AffineTransform rotRight = new AffineTransform();
             rotRight.rotate(-Math.PI / 2.0, centerX, centerY);
-            final Area resRight = getTransformedArea(transformedArea,
-                rotRight);
-            if(!hasOverlap(layouted, resRight)) {
-              layouted.add(resRight);
+            if(!hasOverlap(layouted, transformedBleeded, rotRight)) {
+              layouted.add(getTransformedArea(transformedArea, rotRight));
               foundSolution = true;
             }
             break;
@@ -224,17 +218,15 @@ public class WordleLayouter {
             // left
             AffineTransform rot = new AffineTransform();
             rot.rotate(-Math.PI / 2.0, centerX, centerY);
-            final Area rotL = getTransformedArea(transformedArea, rot);
-            if(!hasOverlap(layouted, rotL)) {
-              layouted.add(rotL);
+            if(!hasOverlap(layouted, transformedBleeded, rot)) {
+              layouted.add(getTransformedArea(transformedArea, rot));
               foundSolution = true;
             }
             // right
             rot = new AffineTransform();
             rot.rotate(Math.PI / 2.0, centerX, centerY);
-            final Area rotR = getTransformedArea(transformedArea, rot);
-            if(!hasOverlap(layouted, rotR)) {
-              layouted.add(rotR);
+            if(!hasOverlap(layouted, transformedBleeded, rot)) {
+              layouted.add(getTransformedArea(transformedArea, rot));
               foundSolution = true;
             }
             break;
@@ -243,17 +235,15 @@ public class WordleLayouter {
             // right
             rot = new AffineTransform();
             rot.rotate(Math.PI / 2.0, centerX, centerY);
-            final Area rot2 = getTransformedArea(transformedArea, rot);
-            if(!hasOverlap(layouted, rot2)) {
-              layouted.add(rot2);
+            if(!hasOverlap(layouted, transformedBleeded, rot)) {
+              layouted.add(getTransformedArea(transformedArea, rot));
               foundSolution = true;
             }
             // left
             rot = new AffineTransform();
             rot.rotate(-Math.PI / 2.0, centerX, centerY);
-            final Area rot1 = getTransformedArea(transformedArea, rot);
-            if(!hasOverlap(layouted, rot1)) {
-              layouted.add(rot1);
+            if(!hasOverlap(layouted, transformedBleeded, rot)) {
+              layouted.add(getTransformedArea(transformedArea, rot));
               foundSolution = true;
             }
             break;
@@ -287,8 +277,9 @@ public class WordleLayouter {
   }
 
   private static boolean hasOverlap(final Deque<Area> alreadyLayouted,
-      final Area current) {
+      final Area bleeded, final AffineTransform aff) {
     final Iterator<Area> already = alreadyLayouted.iterator();
+    final Area current = getTransformedArea(bleeded, aff);
     boolean first = true;
     while(already.hasNext()) {
       final Area s = already.next();
@@ -306,7 +297,7 @@ public class WordleLayouter {
   }
 
   private static boolean hasOverlap(final Area a1, final Area s2) {
-    final Area a2bleeded = createBleededArea(s2);
+    final Area a2bleeded = new Area(s2); // already bleeded
     a2bleeded.intersect(a1);
     return !a2bleeded.isEmpty();
   }
